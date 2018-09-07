@@ -1,0 +1,26 @@
+version: '3'
+services:
+  mysqldb:
+    image: mysql:5.7
+    container_name: mysqldb
+    command: mysqld --user=root --verbose
+    volumes:
+      - ./schemadump.sql:/docker-entrypoint-initdb.d/schemadump.sql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: "test"
+      MYSQL_USER: "root"
+      MYSQL_PASSWORD: "Mehtanagar"
+      MYSQL_ROOT_PASSWORD: "root"
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"  
+  api:
+    build:
+        context: ./
+        dockerfile: dockerfile
+    image: api
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysqldb
+  
